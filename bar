@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -e
+
+vol_cmd() {
+  amixer sget Master | awk -F"[][]" '/dB/ { print $2 }'
+}
+
+ip_cmd() {
+  ip addr show dev wlp58s0 | grep 'inet ' | awk '{ print $2 }'
+}
+
+batt_cmd() {
+  acpi -b | awk -v OFS=' ' '{print $3, $4}'
+}
+
+while xsetroot -name " vol: $(vol_cmd) | $(ip_cmd) | $(batt_cmd) | $(date)"
+do
+  sleep 1
+done
