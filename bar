@@ -3,7 +3,7 @@
 set -e
 
 vol_cmd() {
-  amixer sget Master | awk -F"[][]" '/dB/ { print $2 }'
+  amixer sget Master | grep 'Right:' | awk -F"[][]" '{ print $2 }'
 }
 
 ip_cmd() {
@@ -11,10 +11,10 @@ ip_cmd() {
 }
 
 batt_cmd() {
-  acpi -b | awk -v OFS=' ' '{print $3, $4}'
+  upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep 'percentage' | awk '{ print $2 }'
 }
 
-while xsetroot -name " vol: $(vol_cmd) | $(ip_cmd) | $(batt_cmd) | $(date)"
+while xsetroot -name " vol: $(vol_cmd) | $(ip_cmd) | batt: $(batt_cmd) | $(date)"
 do
   sleep 1
 done
