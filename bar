@@ -7,14 +7,18 @@ vol_cmd() {
 }
 
 ip_cmd() {
-  ip addr show dev wlp58s0 | grep 'inet ' | awk '{ print $2 }'
+  hostname -I
 }
 
 batt_cmd() {
   upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep 'percentage' | awk '{ print $2 }'
 }
 
-while xsetroot -name " vol: $(vol_cmd) | $(ip_cmd) | batt: $(batt_cmd) | $(date)"
+weather() {
+  cat /tmp/weather
+}
+
+while xsetroot -name " weather: $(weather) | vol: $(vol_cmd) | ip: $(ip_cmd) | batt: $(batt_cmd) | $(date)"
 do
   sleep 1
 done
